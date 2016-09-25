@@ -1,0 +1,100 @@
+USE University;
+
+/* Time_Slot */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Time_Slot.csv'
+INTO TABLE Time_Slot
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Time_Slots FROM Time_Slot;
+
+/* Classroom */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Classroom.csv'
+INTO TABLE Classroom
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Classrooms FROM Classroom;
+
+/* Department */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Department.csv'
+INTO TABLE Department
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Departments FROM Department;
+
+/* Instructor */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Instructor.csv'
+INTO TABLE Instructor
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Instructors FROM Instructor;
+
+/* Student */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Student.csv'
+INTO TABLE Student
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Students FROM Student;
+
+/* Advisor */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Advisor.csv'
+INTO TABLE Advisor
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Advisors FROM Advisor;
+
+/* Course */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Course.csv'
+INTO TABLE Course
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Courses FROM Course;
+
+/* Prereq */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Prereq.csv'
+INTO TABLE Prereq
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Prereqs FROM Prereq;
+
+/* Section */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Section.csv'
+INTO TABLE Section
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Sections FROM Section;
+
+/* Teaches */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Teaches.csv'
+INTO TABLE Teaches
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Teaches FROM Teaches;
+
+/* Takes */
+LOAD DATA LOCAL INFILE '.\\DataGen\\Data\\Takes.csv'
+INTO TABLE Takes
+COLUMNS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+SELECT COUNT(*) AS Takes FROM Takes;

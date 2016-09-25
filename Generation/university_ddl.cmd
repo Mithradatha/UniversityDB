@@ -45,7 +45,7 @@ CREATE TABLE Instructor (
 
 CREATE TABLE Course (
 	ID int AUTO_INCREMENT,
-    name varchar(32) UNIQUE,
+    name varchar(75),
     department_name char(3),
     credits int,
     PRIMARY KEY (ID),

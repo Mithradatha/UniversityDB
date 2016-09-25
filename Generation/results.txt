@@ -1,0 +1,25 @@
+Comparing files dataGen-output.txt and DATALOAD-OUTPUT.TXT
+***** dataGen-output.txt
+Courses
+250
+Prereqs
+225
+Sections
+1355
+Teaches
+1490
+Takes
+9919
+***** DATALOAD-OUTPUT.TXT
+Courses
+249
+Prereqs
+223
+Sections
+1345
+Teaches
+1470
+Takes
+9840
+*****
+
