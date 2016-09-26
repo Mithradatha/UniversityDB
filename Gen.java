@@ -21,7 +21,15 @@ public class Gen {
 	private final static String TeachesFileName = "TEACHES.txt";
 	private final static String TakesFileName = "TAKES.txt";
 
+	//use the id of the course, minus one for these
+	//TODO: instantiate!!
+	private static String[] courseToSemester;
+	private static String[] courseToYear;
+	private static int[] courseToNumSections;
+
 	private static final String Semesters = new String[]{"SPRING", "FALL"};
+
+	private static final String[] grades = new String[]{"A", "B", "C", "D", "F"};
 
 	private static String[] ClassPrefixes = new String[]{"CSE", "CHM", "MTH", "BIO", "HUM", "ECE", "SWE", "PSY"};
 	//index 0 is id of the last instructor that belongs to CSE, index 1 for CHM, etc...
@@ -289,13 +297,23 @@ public class Gen {
 
 		//////////////////// SECTION/////////////////////
 		System.out.println("Generating Sections");
+		courseToYear = new String[numCourses];
+		courseToSemester = new String[numCourses];
+		courseToNumSections = new int[numCourses];
 		try {
 			writer = new FileWriter(SectionFileName);
 
 			for (int c_id = 1; c_id < numCourses; c_id++) {
-				for (int section = randIntInRange(1,10); section >= 1; section --) { //doesn't ensure mean is 3 sections per class
-					String semester = Semesters[randIntInRange(0, Semesters.length - 1)];
-					String year = Integer.parseInt(randIntInRange(2000, 2015));
+				//to simplify things, all sections of a given course will happen during the same semester
+				String semester = Semesters[randIntInRange(0, Semesters.length - 1)];
+				String year = Integer.parseInt(randIntInRange(2000, 2015));
+				int tempNumSections = randIntInRange(1,10);
+				//file this info away for future reference
+				courseToYear[c_id - 1] = year;
+				courseToSemester[c_id - 1] = semester;
+				courseToNumSections[c_id - 1] = tempNumSections;
+
+				for (int section = tempNumSections; section >= 1; section --) { //doesn't ensure mean is 3 sections per class
 					int building = randIntInRange(1,20);
 					String room = String.format("%02d", randIntInRange(1, RoomsInBuilding[building - 1]));
 					String timeSlot = Integer.parseInt(randIntInRange(1, 17));
@@ -316,6 +334,21 @@ public class Gen {
 			writer = new FileWriter(TeachesFileName);
 
 			//TODO;
+			//for each course number
+				//for each section of courses
+					//get  the semester, year, and 1.1 teachers from that department
+					//instructors are easy, but the semester and year have to be consistent
+			int currentDept = 0;
+			for (int c_id = 1; c_id <= numCourses; c_id++) {
+				if (c_id > CourseBounds[currentDept]) currentDept++;
+				int numSections = courseToNumSections[c_id - 1];
+				String year = courseToYear[c_id - 1];
+				String semester = courseToSemester[c_id - 1];
+				for (int section = 1; section <= numSections; section++) {
+					int randomInstructorInDept = randIntInRange( (currentDept == 0) ? 0 : InstructorBounds[currentDept - 1], InstructorBounds[currentDept]);
+					printCsvLine(Integer.toString(randomInstructorInDept), Integer.toString(c_id), Integer.toString(section), semester, year);
+				}
+			}
 
 			writer.close();
 		}
@@ -326,9 +359,41 @@ public class Gen {
 		//////////////////// TAKES /////////////////////
 		System.out.println("Generating Takes");
 		try {
+			int[] coursesTakenByStudent = new int[numStudents.length];
+
 			writer = new FileWriter(TakesFileName);
 
-			//TODO
+			//first, put a student in each section of each class:
+			int currentStudentCounter = 1;
+			for (int course = 1; course < numCourses; course++) {
+				int sectionsInThisCourse = courseToNumSections[course - 1];
+				String semester = courseToSemester[course - 1];
+				String year = Integer.toString(courseToYear[course - 1]);
+				for (int section = 1; section <= sectionsInThisCourse; section++) {
+					//add obligatory first student to section
+					printCsvLine(writer, Integer.toString(currentStudentCounter), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
+					coursesTakenByStudent[currentStudentCounter - 1]++;
+					currentStudentCounter++;
+					if (coursesTakenByStudent[currentStudentCounter - 1] >= 7) currentStudentCounter++;
+
+					//determine how many more students to add. number between 0 and 12.
+					int numToAdd = randIntInRange(0,12);
+					ArrayList<Integer> studentsInThisClass = new ArrayList<Integer>();
+					studentsInThisClass.add(currentStudentCounter);
+					while(numToAdd > 0) {
+						int randomStudent = randIntInRange(1, numStudents);
+						while (! (coursesTakenByStudent[randomStudent-1] < 7 && !studentsInThisClass.contains(randomStudent)) ) {
+							randomStudent = randIntInRange(1, numStudents);
+						}
+						printCsvLine(writer, Integer.toString(randomStudent), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
+						coursesTakenByStudent[randomStudent-1]++;
+
+						numToAdd--;
+					}
+
+
+				}
+			}
 
 			writer.close();
 		}
@@ -375,5 +440,9 @@ public class Gen {
 			sb.append(alphabet[randIntInRange(0, alphabet.length - 1)])
 		}
 		return sb.toString();
+	}
+
+	private static String randomGrade() {
+		return grades[randIntInRange(0, grades.length - 1)];
 	}
 }
