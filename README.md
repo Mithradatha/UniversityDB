@@ -12,5 +12,3 @@
 >> * Drop/Create Database
 >> * Truncate Tables
 >> * Generate/Load Data
-
-> 6. Follow Instructions
