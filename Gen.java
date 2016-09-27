@@ -20,6 +20,7 @@ public class Gen {
 	private final static String SectionFileName = "SECTION.txt";
 	private final static String TeachesFileName = "TEACHES.txt";
 	private final static String TakesFileName = "TAKES.txt";
+	private final static String InstructorFileName = "INSTRUCTOR.txt";
 
 	//use the id of the course, minus one for these
 	//TODO: instantiate!!
@@ -27,7 +28,7 @@ public class Gen {
 	private static String[] courseToYear;
 	private static int[] courseToNumSections;
 
-	private static final String Semesters = new String[]{"SPRING", "FALL"};
+	private static final String[] Semesters = new String[]{"SPRING", "FALL"};
 
 	private static final String[] grades = new String[]{"A", "B", "C", "D", "F"};
 
@@ -46,8 +47,8 @@ public class Gen {
 	private static int      MWFduration = 60;
 	private static String[] MWFstrings = new String[] {"M", "W", "F"};
 	private static int[]    TRtimes = new int[]{8 * 60, 9 * 60 + 30, 11 * 60, 12 * 60 + 30, 2 * 60, 3 * 60 + 30, 5 * 60};
-	private static int[]    TRids   = new int[]{    11,          12,      13, 1          4,     15,          16,     17};
-	private static double   TRduration = 75;
+	private static int[]    TRids   = new int[]{    11,          12,      13,           14,     15,          16,     17};
+	private static int      TRduration = 75;
 	private static String[] TRstrings = new String[] {"T", "R"};
 
 	private static String[] alphabet = new String[]{"A", "B", "C", "D", "E", "F",
@@ -74,7 +75,7 @@ public class Gen {
 		try {
 			//generate data
 			ArrayList<Integer> buildings = new ArrayList<Integer>(ClassPrefixes.length);
-			while (buildings.length < ClassPrefixes.length) {
+			while (buildings.size() < ClassPrefixes.length) {
 				int temp = randIntInRange(1,20);
 				buildings.add(temp);
 			}
@@ -86,7 +87,7 @@ public class Gen {
 			//write this info
 			writer = new FileWriter(DepartmentFileName);
 			for (int i = 0; i < ClassPrefixes.length; i++) {
-				printCsvLine(writer, ClassPrefixes[i], Integer.toString(buildings.get(i)), Integer.toString(budgets.get(i)));
+				writeCsvLine(writer, ClassPrefixes[i], Integer.toString(buildings.get(i)), Integer.toString(budgets.get(i)));
 			}
 			writer.close();
 		}
@@ -124,6 +125,9 @@ public class Gen {
 				writeCsvLine(writer, Integer.toString(id));
 			}
 		}
+		catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+		}
 
 		//////////////// Time Slot Details ///////////////////
 		System.out.println("Generating Time Slot Details");
@@ -134,9 +138,9 @@ public class Gen {
 				int id = MWFids[i];
 				int startTime = MWFtimes[i];
 				int endTime = startTime + MWFduration;
-				for (int j = 0; j < MWFstrings.length; i++) {
+				for (int j = 0; j < MWFstrings.length; j++) {
 					String day = MWFstrings[j];
-					writeCsvLine(Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
+					writeCsvLine(writer, Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
 				}
 			}
 			// tues, thurs time slots
@@ -144,9 +148,9 @@ public class Gen {
 				int id = TRids[i];
 				int startTime = TRtimes[i];
 				int endTime = startTime + TRduration;
-				for (int j = 0; j < TRstrings.length; i++) {
+				for (int j = 0; j < TRstrings.length; j++) {
 					String day = TRstrings[j];
-					writeCsvLine(Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
+					writeCsvLine(writer, Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
 				}
 			}
 
@@ -176,15 +180,15 @@ public class Gen {
 				if (id > StudentBounds[currentDept]) {
 					currentDept++;
 				}
-				string name = randomName();
-				string deptName = ClassPrefixes[currentDept];
+				String name = randomName();
+				String deptName = ClassPrefixes[currentDept];
 				int credits = randIntInRange(0, 130);
-				printCsvLine(writer, Integer.toString(id), name, deptName, Integer.toString(credits));
+				writeCsvLine(writer, Integer.toString(id), name, deptName, Integer.toString(credits));
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
@@ -209,12 +213,12 @@ public class Gen {
 				if (id > InstructorBounds[currentDept])
 					currentDept++;
 				int salary = randIntInRange(30000, 150000);
-				printCsvLine(writer, Integer.toString(id), randomName(), ClassPrefixes[currentDept], Integer.toString(salary);
+				writeCsvLine(writer, Integer.toString(id), randomName(), ClassPrefixes[currentDept], Integer.toString(salary));
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
@@ -232,20 +236,20 @@ public class Gen {
 				if (s_id > StudentBounds[currentDept]) {
 					currentDept++;
 				}
-				i_id = ( currentDept == 0 ) ? randIntInRange(1, InstructorBounds[0]) : randIntInRange(InstructorBounds[currentDept-1]+1, InstructorBounds[currentDept]);
+				int i_id = ( currentDept == 0 ) ? randIntInRange(1, InstructorBounds[0]) : randIntInRange(InstructorBounds[currentDept-1]+1, InstructorBounds[currentDept]);
 
-				printCsvLine(writer, Integer.toString(s_id), Integer.toString(i_id));
+				writeCsvLine(writer, Integer.toString(s_id), Integer.toString(i_id));
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
 		/////////////////// COURSE //////////////////////////
-		System.out.println("Generating courses...");
-		int numCourses = numInstructors * 2.5;
+		System.out.println("Generating Courses");
+		int numCourses = (int) (numInstructors * 2.5);
 		try {
 			writer = new FileWriter(CourseFileName);
 
@@ -255,11 +259,11 @@ public class Gen {
 			for (int i = 0; i < CourseBounds.length - 1; i++) {
 				CourseBounds[i] = (i+1) * coursesPerDept;
 			}
-			Coursebounds[CourseBounds.length - 1] = numCourses;
+			CourseBounds[CourseBounds.length - 1] = numCourses;
 
 			//generate courses
 			int currentDept = 0;
-			for (int c_id = 1; c_id <= numCourses; numCourses++) {
+			for (int c_id = 1; c_id <= numCourses; c_id++) {
 				if (c_id > CourseBounds[currentDept]) {
 					currentDept++;
 				}
@@ -267,12 +271,12 @@ public class Gen {
 				String dept = ClassPrefixes[currentDept];
 				int credits = randIntInRange(1,4);
 
-				printCsvLine(writer, Integer.toString(c_id), title, dept, Integer.toString(credits));
+				writeCsvLine(writer, Integer.toString(c_id), title, dept, Integer.toString(credits));
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
@@ -281,17 +285,17 @@ public class Gen {
 		try {
 			writer = new FileWriter(PrereqFileName);
 
-			for (int c_id = 1, c_id < numCourses; c_id++) {
+			for (int c_id = 1; c_id < numCourses; c_id++) {
 				if (c_id % 10 == 0) continue; //one in ten courses doesn't have a prereq
 				int p_id = c_id;
 				while (c_id == p_id) p_id = randIntInRange(1, numCourses); //not guaranteed to terminate, but I'm not
 							                                                  // concerned with correctness
-		      printCsvLine(writer, Integer.toString(c_id), Integer.toString(p_id));
+		      writeCsvLine(writer, Integer.toString(c_id), Integer.toString(p_id));
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
@@ -306,7 +310,7 @@ public class Gen {
 			for (int c_id = 1; c_id < numCourses; c_id++) {
 				//to simplify things, all sections of a given course will happen during the same semester
 				String semester = Semesters[randIntInRange(0, Semesters.length - 1)];
-				String year = Integer.parseInt(randIntInRange(2000, 2015));
+				String year = Integer.toString(randIntInRange(2000, 2015));
 				int tempNumSections = randIntInRange(1,10);
 				//file this info away for future reference
 				courseToYear[c_id - 1] = year;
@@ -316,15 +320,15 @@ public class Gen {
 				for (int section = tempNumSections; section >= 1; section --) { //doesn't ensure mean is 3 sections per class
 					int building = randIntInRange(1,20);
 					String room = String.format("%02d", randIntInRange(1, RoomsInBuilding[building - 1]));
-					String timeSlot = Integer.parseInt(randIntInRange(1, 17));
+					String timeSlot = Integer.toString(randIntInRange(1, 17));
 
-					printCsvLine(Integer.toString(c_id), String.format("%02d",section), semester, year, Integer.toString(building), room, timeSlot);
+					writeCsvLine(writer, Integer.toString(c_id), String.format("%02d",section), semester, year, Integer.toString(building), room, timeSlot);
 				}
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
@@ -346,20 +350,20 @@ public class Gen {
 				String semester = courseToSemester[c_id - 1];
 				for (int section = 1; section <= numSections; section++) {
 					int randomInstructorInDept = randIntInRange( (currentDept == 0) ? 0 : InstructorBounds[currentDept - 1], InstructorBounds[currentDept]);
-					printCsvLine(Integer.toString(randomInstructorInDept), Integer.toString(c_id), Integer.toString(section), semester, year);
+					writeCsvLine(writer, Integer.toString(randomInstructorInDept), Integer.toString(c_id), Integer.toString(section), semester, year);
 				}
 			}
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
 		//////////////////// TAKES /////////////////////
 		System.out.println("Generating Takes");
 		try {
-			int[] coursesTakenByStudent = new int[numStudents.length];
+			int[] coursesTakenByStudent = new int[numStudents];
 
 			writer = new FileWriter(TakesFileName);
 
@@ -368,10 +372,10 @@ public class Gen {
 			for (int course = 1; course < numCourses; course++) {
 				int sectionsInThisCourse = courseToNumSections[course - 1];
 				String semester = courseToSemester[course - 1];
-				String year = Integer.toString(courseToYear[course - 1]);
+				String year = courseToYear[course - 1];
 				for (int section = 1; section <= sectionsInThisCourse; section++) {
 					//add obligatory first student to section
-					printCsvLine(writer, Integer.toString(currentStudentCounter), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
+					writeCsvLine(writer, Integer.toString(currentStudentCounter), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
 					coursesTakenByStudent[currentStudentCounter - 1]++;
 					currentStudentCounter++;
 					if (coursesTakenByStudent[currentStudentCounter - 1] >= 7) currentStudentCounter++;
@@ -385,7 +389,7 @@ public class Gen {
 						while (! (coursesTakenByStudent[randomStudent-1] < 7 && !studentsInThisClass.contains(randomStudent)) ) {
 							randomStudent = randIntInRange(1, numStudents);
 						}
-						printCsvLine(writer, Integer.toString(randomStudent), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
+						writeCsvLine(writer, Integer.toString(randomStudent), Integer.toString(course), Integer.toString(section), semester, year, randomGrade());
 						coursesTakenByStudent[randomStudent-1]++;
 
 						numToAdd--;
@@ -397,18 +401,18 @@ public class Gen {
 
 			writer.close();
 		}
-		catch( exception e) {
+		catch( Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 	}
 
 
 
-	private static randIntInRange(int lo, int hi) {
+	private static int randIntInRange(int lo, int hi) {
 		assert hi >= lo;
 		return random.nextInt(hi + 1 - lo) + lo;
 	}
-	private static writeCsvLine(FileWriter w, String... values) throws Exception{
+	private static void writeCsvLine(FileWriter w, String... values) throws Exception{
 		try {
 			for (int i = 0; i < values.length; i++) {
 				w.write(values[i]);
@@ -437,7 +441,7 @@ public class Gen {
 		int numChars = randIntInRange(1, 32);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < numChars; i++) {
-			sb.append(alphabet[randIntInRange(0, alphabet.length - 1)])
+			sb.append(alphabet[randIntInRange(0, alphabet.length - 1)]);
 		}
 		return sb.toString();
 	}

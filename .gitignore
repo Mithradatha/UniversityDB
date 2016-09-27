@@ -1,2 +1,5 @@
 # Office instance excel files
 ~*.xlsx
+#output files from Gen
+*.txt
+*.class
