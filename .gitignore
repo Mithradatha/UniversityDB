@@ -1,5 +1,7 @@
 # Office instance excel files
 ~*.xlsx
-#output files from Gen
+# Output files from Gen
 *.txt
 *.class
+# Mac OS is garbage
+*.DS_Store
