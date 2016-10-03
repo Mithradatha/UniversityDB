@@ -8,19 +8,9 @@ public class Gen {
 
 	private static FileWriter writer;
 	private static Random random = new Random();
-
-	private final static String DepartmentFileName = "DEPARTMENT.txt";
-	private final static String ClassroomFileName = "CLASSROOM.txt";
-	private final static String TimeslotFileName = "TIMESLOT.txt";
-	private final static String TimeslotdetailFileName = "TIMESLOTDETAIL.txt";
-	private final static String StudentFileName = "STUDENT.txt";
-	private final static String AdvisorFileName = "ADVISOR.txt";
-	private final static String CourseFileName = "COURSE.txt";
-	private final static String PrereqFileName = "PREREQ.txt";
-	private final static String SectionFileName = "SECTION.txt";
-	private final static String TeachesFileName = "TEACHES.txt";
-	private final static String TakesFileName = "TAKES.txt";
-	private final static String InstructorFileName = "INSTRUCTOR.txt";
+	
+	private final static String folderStructure = ".\\Generation\\DataGen\\Data\\";
+	private final static String fileExtention = ".csv";
 
 	//use the id of the course, minus one for these
 	//TODO: instantiate!!
@@ -28,7 +18,7 @@ public class Gen {
 	private static String[] courseToYear;
 	private static int[] courseToNumSections;
 
-	private static final String[] Semesters = new String[]{"SPRING", "FALL"};
+	private static final String[] Semesters = new String[]{"Spring", "Fall"};
 
 	private static final String[] grades = new String[]{"A", "B", "C", "D", "F"};
 
@@ -42,14 +32,10 @@ public class Gen {
 	private static int[] CourseBounds;
 
 	//times are represented as ints (unit: minutes)
-	private static int[]    MWFtimes = new int[]{8 * 60 , 9 * 60, 10* 60, 11* 60, 12* 60, 1* 60, 2* 60, 3* 60, 4* 60, 5* 60};
-	private static int[]    MWFids   = new int[]{      1,      2,      3,      4,      5,     6,     7,     8,     9,    10};
-	private static int      MWFduration = 60;
-	private static String[] MWFstrings = new String[] {"M", "W", "F"};
-	private static int[]    TRtimes = new int[]{8 * 60, 9 * 60 + 30, 11 * 60, 12 * 60 + 30, 2 * 60, 3 * 60 + 30, 5 * 60};
-	private static int[]    TRids   = new int[]{    11,          12,      13,           14,     15,          16,     17};
+	private static int[]    MWFtimes = new int[]{8 * 60 , 9 * 60, 10* 60, 11* 60, 12 * 60, 13 * 60, 14 * 60, 15 * 60, 16 * 60, 17 * 60};
+	private static int      MWFduration = 50;
+	private static int[]    TRtimes = new int[]{8 * 60, 9 * 60 + 30, 11 * 60, 12 * 60 + 30, 14 * 60, 15 * 60 + 30, 17 * 60};
 	private static int      TRduration = 75;
-	private static String[] TRstrings = new String[] {"T", "R"};
 
 	private static String[] alphabet = new String[]{"A", "B", "C", "D", "E", "F",
 	                                                "G", "H", "I", "J", "K", "L",
@@ -76,7 +62,7 @@ public class Gen {
 			//generate data
 			ArrayList<Integer> buildings = new ArrayList<Integer>(ClassPrefixes.length);
 			while (buildings.size() < ClassPrefixes.length) {
-				int temp = randIntInRange(1,20);
+                int temp = randIntInRange(1,20);
 				buildings.add(temp);
 			}
 			ArrayList<Integer> budgets = new ArrayList<Integer>(ClassPrefixes.length);
@@ -85,7 +71,7 @@ public class Gen {
 			}
 
 			//write this info
-			writer = new FileWriter(DepartmentFileName);
+			writer = generateFileWriter("Department");
 			for (int i = 0; i < ClassPrefixes.length; i++) {
 				writeCsvLine(writer, ClassPrefixes[i], Integer.toString(buildings.get(i)), Integer.toString(budgets.get(i)));
 			}
@@ -99,7 +85,7 @@ public class Gen {
 		System.out.println("Generating Classrooms");
 
 		try {
-			writer = new FileWriter(ClassroomFileName);
+			writer = generateFileWriter("Classroom");
 
 			RoomsInBuilding = new int[20];
 			for (int building = 1; building <= 20; building++) {
@@ -117,54 +103,34 @@ public class Gen {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
 
-		////////////////// Time Slot ///////////////////////////
-		System.out.println("Generating Time Slots!");
-		try {
-			writer = new FileWriter(TimeslotdetailFileName);
-			for (int id = 1; id <= 17; id++) {
-				writeCsvLine(writer, Integer.toString(id));
-			}
-		}
-		catch (Exception e) {
-			System.out.println("An error occurred: " + e.getMessage());
-		}
 
-		//////////////// Time Slot Details ///////////////////
-		System.out.println("Generating Time Slot Details");
-		try {
-			writer = new FileWriter(TimeslotdetailFileName);
-			//mon, wed, fri time slots
-			for (int i = 0; i < MWFtimes.length; i++) {
-				int id = MWFids[i];
-				int startTime = MWFtimes[i];
-				int endTime = startTime + MWFduration;
-				for (int j = 0; j < MWFstrings.length; j++) {
-					String day = MWFstrings[j];
-					writeCsvLine(writer, Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
-				}
-			}
-			// tues, thurs time slots
-			for (int i = 0; i < TRtimes.length; i++) {
-				int id = TRids[i];
-				int startTime = TRtimes[i];
-				int endTime = startTime + TRduration;
-				for (int j = 0; j < TRstrings.length; j++) {
-					String day = TRstrings[j];
-					writeCsvLine(writer, Integer.toString(id), day, formatTime(startTime), formatTime(endTime));
-				}
-			}
+		//////////////// Time Slot ///////////////////
+		System.out.println("Generating Time Slot");
 
-			writer.close();
-		}
-		catch (Exception e) {
-			System.out.println("An error occurred: " + e.getMessage());
-		}
+        try {
+            writer = generateFileWriter("Time_Slot");
+            for (int id = 1; id <= 17; id++) {
+                if (id <= 10) { // MWF
+                    int startTime = MWFtimes[id-1];
+                    int endTime = startTime + MWFduration;
+                    writeCsvLine(writer, Integer.toString(id), "MWF", formatTime(startTime), formatTime(endTime));
+                } else {    // TR
+                    int startTime = TRtimes[id - 11];
+                    int endTime = startTime + TRduration;
+                    writeCsvLine(writer, Integer.toString(id), "TR", formatTime(startTime), formatTime(endTime));
+                }
+            }
+            writer.close();
+
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
 
 		///////////////// STUDENT ////////////////////////////
 		System.out.println("Generating Students");
 		int numStudents = SF * 2500;
 		try {
-			writer = new FileWriter(StudentFileName);
+			writer = generateFileWriter("Student");
 
 			int studentsPerDept = numStudents / ClassPrefixes.length;
 			//initialize StudentBounds
@@ -196,7 +162,7 @@ public class Gen {
 		System.out.println("Generating Instructors");
 		int numInstructors = SF * 100;
 		try {
-			writer = new FileWriter(InstructorFileName);
+			writer = generateFileWriter("Instructor");
 
 
 			InstructorBounds = new int[ClassPrefixes.length];
@@ -226,7 +192,7 @@ public class Gen {
 		////////////////// ADVISOR ////////////////////////////
 		System.out.println("Generating Advisors");
 		try {
-			writer = new FileWriter(AdvisorFileName);
+			writer = generateFileWriter("Advisor");
 
 			int currentDept = 0;
 			for (int s_id = 1; s_id <= numStudents; s_id++) {
@@ -251,7 +217,7 @@ public class Gen {
 		System.out.println("Generating Courses");
 		int numCourses = (int) (numInstructors * 2.5);
 		try {
-			writer = new FileWriter(CourseFileName);
+			writer = generateFileWriter("Course");
 
 			//instantiate CourseBounds
 			int coursesPerDept = numCourses / ClassPrefixes.length;
@@ -283,7 +249,7 @@ public class Gen {
 		//////////////////// PREREQ /////////////////////
 		System.out.println("Generating Prereqs");
 		try {
-			writer = new FileWriter(PrereqFileName);
+			writer = generateFileWriter("Prereq");
 
 			for (int c_id = 1; c_id < numCourses; c_id++) {
 				if (c_id % 10 == 0) continue; //one in ten courses doesn't have a prereq
@@ -305,7 +271,7 @@ public class Gen {
 		courseToSemester = new String[numCourses];
 		courseToNumSections = new int[numCourses];
 		try {
-			writer = new FileWriter(SectionFileName);
+			writer = generateFileWriter("Section");
 
 			for (int c_id = 1; c_id < numCourses; c_id++) {
 				//to simplify things, all sections of a given course will happen during the same semester
@@ -335,7 +301,7 @@ public class Gen {
 		//////////////////// TEACHES /////////////////////
 		System.out.println("Generating Teaches");
 		try {
-			writer = new FileWriter(TeachesFileName);
+			writer = generateFileWriter("Teaches");
 
 			//TODO;
 			//for each course number
@@ -365,7 +331,7 @@ public class Gen {
 		try {
 			int[] coursesTakenByStudent = new int[numStudents];
 
-			writer = new FileWriter(TakesFileName);
+			writer = generateFileWriter("Takes");
 
 			//first, put a student in each section of each class:
 			int currentStudentCounter = 1;
@@ -407,11 +373,15 @@ public class Gen {
 	}
 
 
-
+	private static FileWriter generateFileWriter(final String fileName) {
+		return new FileWriter(folderStructure + fileName + fileExtention);
+	}
+	
 	private static int randIntInRange(int lo, int hi) {
 		assert hi >= lo;
 		return random.nextInt(hi + 1 - lo) + lo;
 	}
+	
 	private static void writeCsvLine(FileWriter w, String... values) throws Exception{
 		try {
 			for (int i = 0; i < values.length; i++) {
@@ -431,10 +401,11 @@ public class Gen {
 		int m = minutes % 60;
 		minutes = minutes - m; //now it's an even multiple of 60
 		int h = minutes / 60;
-		if (h > 12) {
-			h -= 12;
+        int s = 0;
+		if (h > 24) {
+			h -= 24;
 		}
-		return String.format("%02d", h) + ":" + String.format("%02d", m);
+		return String.format("%02d", h) + ":" + String.format("%02d", m) + ":" + String.format("%02d", s);
 	}
 
 	private static String randomName() {

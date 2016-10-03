@@ -12,3 +12,7 @@
 >> * Drop/Create Database
 >> * Truncate Tables
 >> * Generate/Load Data
+
+--
+## Notes
+> Scale Factor 10,050 -> ~5gb data

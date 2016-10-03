@@ -12,3 +12,6 @@ class Department:
     
     def printLine(self):
         return '{0},{1},{2}\n'.format(self.name, self.building, self.budget)
+
+
+department_names = ['CSE','MTH','CHM','BIO','HUM','ECE','SWE','PSY']
