@@ -6,8 +6,10 @@ from misc import time_slots, course_catalog, fake_names
 
 if __name__ == "__main__":
 
+	counter = 0
+
 	initStart = datetime.now()
-	start = initStart
+	#start = initStart
 
 	# Throttle
 	SF = 10050
@@ -80,6 +82,10 @@ if __name__ == "__main__":
 		print "Start: ",start.time()
 		print "End: ",end.time()
 		print "Duration: ",end-start
+		
+	def printCounter(component):
+		print component
+		print counter
 
 	def partition(m, n, deviation):
 		mean = int(m / n)
@@ -94,14 +100,15 @@ if __name__ == "__main__":
 		ls.append(m - sum(ls))
 		return ls
 
-	end = datetime.now()
-	printDuration('Initialization')
+	#end = datetime.now()
+	#printDuration('Initialization')
 
 	# Master Storage
 	master = dict((department_name, {}) for department_name in department_names)
 
 	# Time Slots
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	timeslotFile = open('.\\Data\\' + 'Time_Slot.csv', "w")
 	timeslotFile.write('ID,days,start_time,end_time\n')
@@ -109,13 +116,16 @@ if __name__ == "__main__":
 	for time_slot_id in time_slots:
 		time_slot = time_slots[time_slot_id]
 		timeslotFile.write('{0},{1},{2},{3}\n'.format(time_slot_id, time_slot.days, time_slot.start_time, time_slot.end_time))
+		counter += 1
 
 	timeslotFile.close()
-	end = datetime.now()
-	printDuration('Time Slots')
+	#end = datetime.now()
+	#printDuration('Time Slots')
+	printCounter('Time_Slots')
 
 	# Classrooms
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	classrooms = {}
 	classroomFile = open('.\\Data\\' + 'Classroom.csv', "w")
@@ -126,13 +136,16 @@ if __name__ == "__main__":
 		classrooms[building_id] = range(1, randint(min_rooms_per_buiding, max_rooms_per_building) + 1)
 		for room_number in classrooms[building_id]:
 			classroomFile.write('{0},{1},{2}\n'.format(building_id, room_number, randint(min_room_capacity, max_room_capacity)))
+			counter += 1
 		
 	classroomFile.close()
-	end = datetime.now()
-	printDuration('Classrooms')
+	#end = datetime.now()
+	#printDuration('Classrooms')
+	printCounter('Classrooms')
 
 	# Departments
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	shuffle(department_names)
 
@@ -144,30 +157,18 @@ if __name__ == "__main__":
 
 	for department_name in department_names:
 		departmentFile.write('{0},{1},{2}\n'.format(department_name, buildings.pop(), randint(min_department_budget, max_department_budget)))
+		counter += 1
 		master[department_name]['Students'] = []
 		master[department_name]['Instructors'] = []
 
 	departmentFile.close()
-	end = datetime.now()
-	printDuration('Departments')
-
-	# Students
-	start = datetime.now()
-
-	studentFile = open('.\\Data\\' + 'Student.csv', "w")
-	studentFile.write('ID,name,department_name,credits\n')
-
-	for student_id in xrange(1, number_of_students + 1):
-		department = choice(department_names)
-		studentFile.write('{0},{1},{2},{3}\n'.format(student_id, choice(fake_names), department, randint(min_student_credits, max_student_credits)))
-		master[department]['Students'].append(student_id)
-
-	studentFile.close()
-	end = datetime.now()
-	printDuration('Students')
+	#end = datetime.now()
+	#printDuration('Departments')
+	printCounter('Departments')
 
 	# Instructors
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	instructorFile = open('.\\Data\\' + 'Instructor.csv', "w")
 	instructorFile.write('ID,name,department_name,salary\n')
@@ -175,14 +176,35 @@ if __name__ == "__main__":
 	for instructor_id in xrange(1, number_of_instructors + 1):
 		department = choice(department_names)
 		instructorFile.write('{0},{1},{2},{3}\n'.format(instructor_id, choice(fake_names), department, randint(min_instructor_salary, max_instructor_salary)))
+		counter += 1
 		master[department]['Instructors'].append(instructor_id)
 
 	instructorFile.close()
-	end = datetime.now()
-	printDuration('Instructors')
+	#end = datetime.now()
+	#printDuration('Instructors')
+	printCounter('Instructors')
+	
+	# Students
+	#start = datetime.now()
+	counter = 0
+
+	studentFile = open('.\\Data\\' + 'Student.csv', "w")
+	studentFile.write('ID,name,department_name,credits\n')
+
+	for student_id in xrange(1, number_of_students + 1):
+		department = choice(department_names)
+		studentFile.write('{0},{1},{2},{3}\n'.format(student_id, choice(fake_names), department, randint(min_student_credits, max_student_credits)))
+		counter += 1
+		master[department]['Students'].append(student_id)
+
+	studentFile.close()
+	#end = datetime.now()
+	#printDuration('Students')
+	printCounter('Students')
 
 	# Advisors
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	advisorFile = open('.\\Data\\' + 'Advisor.csv', "w")
 	advisorFile.write('student_ID,instructor_ID\n')
@@ -192,13 +214,19 @@ if __name__ == "__main__":
 		for student_id in master[department]['Students']:
 			if randint(0, 100) <= deviation_advisors:
 				advisorFile.write('{0},{1}\n'.format(student_id, choice(instructors)))
+				counter += 1
 
 	advisorFile.close()    
-	end = datetime.now()
-	printDuration('Advisors')
+	#end = datetime.now()
+	#printDuration('Advisors')
+	printCounter('Advisors')
 
 	# Courses
-	start = datetime.now()
+	#start = datetime.now()
+	counter_courses = 0
+	counter_prereqs = 0
+	counter_sections = 0
+	counter_teaches = 0
 
 	courses = {}
 	buildings = classrooms.keys()
@@ -228,12 +256,14 @@ if __name__ == "__main__":
 		else:
 			course_catalog[department][index] = title + ' 2'
 		courseFile.write('{0},{1},{2},{3}\n'.format(course_id, title, department, randint(min_course_credits, max_course_credits)))
+		counter_courses += 1
 		# Prereqs
 		if randint(0, 100) <= deviation_prereqs:
 			prereq_id = course_id
 			while prereq_id == course_id:
 				prereq_id = randint(1, number_of_courses)
 			prereqFile.write('{0},{1}\n'.format(course_id, prereq_id))
+			counter_prereqs += 1
 		# Sections
 		for section_number in xrange(1, randint(min_sections_per_course, max_sections_per_course) + 1):
 			building = choice(buildings)
@@ -241,18 +271,29 @@ if __name__ == "__main__":
 			year = randint(min_section_year, max_section_year)
 			courses[course_id][section_number] = Section(semester=semester, year=year)
 			sectionFile.write('{0},{1},{2},{3},{4},{5},{6}\n'.format(course_id, section_number, semester, year, building, choice(classrooms[building]), choice(time_slots.keys())))
+			counter_sections += 1
 			# Teaches
 			teachesFile.write('{0},{1},{2},{3},{4}\n'.format(choice(instructors), course_id, section_number, semester, year))
-
+			counter_teaches += 1
+			
 	prereqFile.close()
 	teachesFile.close()
 	sectionFile.close()
 	courseFile.close()
-	end = datetime.now()
-	printDuration('Courses')
+	#end = datetime.now()
+	#printDuration('Courses')
+	counter = counter_courses
+	printCounter('Courses')
+	counter = counter_prereqs
+	printCounter('Prereqs')
+	counter = counter_sections
+	printCounter('Sections')
+	counter = counter_teaches
+	printCounter('Teaches')
 
 	# Takes
-	start = datetime.now()
+	#start = datetime.now()
+	counter = 0
 
 	course_ids = courses.keys()
 
@@ -266,11 +307,13 @@ if __name__ == "__main__":
 				section_number = choice(courses[course_id].keys())
 				section = courses[course_id][section_number]
 				takesFile.write('{0},{1},{2},{3},{4},{5}\n'.format(student_id, course_id, section_number, section.semester, section.year, choice(grades)))
+				counter += 1
 
 	takesFile.close()
-	end = datetime.now()
-	printDuration('Takes')
+	#end = datetime.now()
+	#printDuration('Takes')
+	printCounter('Takes')
 
-	start = initStart
-	end = datetime.now()
-	printDuration('Total')
+	#start = initStart
+	#end = datetime.now()
+	#printDuration('Total')

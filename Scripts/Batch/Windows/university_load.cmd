@@ -7,7 +7,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Time_Slots FROM; */
 
 /* Classroom */
 LOAD DATA LOCAL INFILE 'Classroom.csv'
@@ -16,7 +15,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Classrooms FROM; */
 
 /* Department */
 LOAD DATA LOCAL INFILE 'Department.csv'
@@ -25,7 +23,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Departments FROM; */
 
 /* Instructor */
 LOAD DATA LOCAL INFILE 'Instructor.csv'
@@ -34,7 +31,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Instructors FROM; */
 
 /* Student */
 LOAD DATA LOCAL INFILE 'Student.csv'
@@ -43,7 +39,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Students FROM; */
 
 /* Advisor */
 LOAD DATA LOCAL INFILE 'Advisor.csv'
@@ -52,7 +47,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Advisors FROM; */
 
 /* Course */
 LOAD DATA LOCAL INFILE 'Course.csv'
@@ -61,7 +55,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Courses FROM; */
 
 /* Prereq */
 LOAD DATA LOCAL INFILE 'Prereq.csv'
@@ -70,7 +63,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Prereqs FROM; */
 
 /* Section */
 LOAD DATA LOCAL INFILE 'Section.csv'
@@ -79,7 +71,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Sections FROM; */
 
 /* Teaches */
 LOAD DATA LOCAL INFILE 'Teaches.csv'
@@ -88,7 +79,6 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Teaches FROM; */
 
 /* Takes */
 LOAD DATA LOCAL INFILE 'Takes.csv'
@@ -97,4 +87,15 @@ COLUMNS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-/* SELECT COUNT(*) AS Takes FROM; */
+
+SELECT COUNT(*) AS Time_Slots FROM Time_Slot;
+SELECT COUNT(*) AS Classrooms FROM Classroom;
+SELECT COUNT(*) AS Departments FROM Department;
+SELECT COUNT(*) AS Instructors FROM Instructor;
+SELECT COUNT(*) AS Students FROM Student;
+SELECT COUNT(*) AS Advisors FROM Advisor;
+SELECT COUNT(*) AS Courses FROM Course;
+SELECT COUNT(*) AS Prereqs FROM Prereq;
+SELECT COUNT(*) AS Sections FROM Section;
+SELECT COUNT(*) AS Teaches FROM Teaches;
+SELECT COUNT(*) AS Takes FROM Takes;

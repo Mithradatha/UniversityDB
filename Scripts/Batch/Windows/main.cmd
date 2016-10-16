@@ -55,8 +55,14 @@ IF %answer%==4 (
 	CD /d %root%/Generation/Data
 
 	ECHO Connecting to Database...
-	mysql -h localhost -u root -p < %origin%\university_load.cmd
+	mysql -h localhost -u root -p < %origin%\university_load.cmd > dataLoad-output.txt
 	ECHO University Database Loaded.
+	
+	IF !lang!==2 (
+		ECHO. && ECHO.
+		FC dataGen-output.txt dataLoad-output.txt > dataResults-output.txt
+		CAT dataResults-output.txt
+	)
 	
 	POPD
 	ECHO.
