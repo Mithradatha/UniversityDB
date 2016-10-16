@@ -4,11 +4,15 @@ setlocal enabledelayedexpansion
 
 SET origin=%~dp0
 SET root=.\..\..\..
-SET menu=ECHO. && ECHO. && ECHO 1. Drop/Create Database && ECHO.2. Truncate Tables && ECHO.3. Generate Data && ECHO.4. Load Data && ECHO.5. Exit
 
 :begin
-ECHO.
-%menu%
+ECHO. && ECHO.
+ECHO 1. Drop/Create Database
+ECHO.2. Truncate Tables
+ECHO.3. Generate Data
+ECHO.4. Load Data
+ECHO.5. Exit
+ECHO. && ECHO.
 
 SET lang=2
 SET scale=1
@@ -32,16 +36,16 @@ IF %answer%==3 (
 	ECHO 1. Java
 	ECHO 2. Python
 	ECHO.
-SET /p lang=" >> "
+	SET /p lang=" >> "
 	ECHO.
 	
-SET /p scale="Enter Scale Factor: "
+	SET /p scale="Enter Scale Factor: "
 	ECHO.
 	
 	ECHO Generating Random Data...
-	IF !lang!==1 (java JGen.java !scale! > .\Data\dataGen-output.txt)
+	IF !lang!==1 (java -cp Generation; JGen !scale! > .\Data\dataGen-output.txt)
 	IF !lang!==2 (python PGen.py !scale! > .\Data\dataGen-output.txt)
-	ECHO Data Generated!
+	ECHO Data Generated.
 
 	POPD
 	ECHO.
@@ -52,7 +56,7 @@ IF %answer%==4 (
 
 	ECHO Connecting to Database...
 	mysql -h localhost -u root -p < %origin%\university_load.cmd
-	ECHO University Database Loaded!
+	ECHO University Database Loaded.
 	
 	POPD
 	ECHO.
