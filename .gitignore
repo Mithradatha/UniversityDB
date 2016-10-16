@@ -1,7 +1,6 @@
 # Office instance excel files
 ~*.xlsx
 # Output files from Gen
-*.class
 **/*.csv
 **/*.txt
 # Mac OS is garbage
