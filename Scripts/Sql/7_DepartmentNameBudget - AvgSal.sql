@@ -8,5 +8,6 @@ JOIN (
 	SELECT i.department_name
 	FROM University.Instructor i
 	GROUP BY i.department_name
-	HAVING AVG(i.salary) > 145000) AS i
-		ON (d.name = i.department_name)
+	HAVING AVG(i.salary) > 145000
+	) AS i 
+	ON (d.name = i.department_name)
