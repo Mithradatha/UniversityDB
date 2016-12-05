@@ -1,4 +1,4 @@
-/*1.	Find the department name and total number of faculty 
+/*1. Find the department name and total number of faculty 
 for each department.*/
 
 SELECT d.name AS department_name, COUNT(i.name) AS total_faculty
